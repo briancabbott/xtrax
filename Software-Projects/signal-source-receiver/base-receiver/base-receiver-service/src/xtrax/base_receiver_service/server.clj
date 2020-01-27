@@ -1,16 +1,21 @@
 (ns xtrax.base-receiver-service.server
   ; (:gen-class)
   (:require
+    [clojure.pprint :as pp]
     [clojure.edn :as edn]
     [clojure.java.io :refer [resource]]
-    [xtrax.base-receiver-service.schema :as receiver-schema]
-    [xtrax.base-receiver-service.receiver :as receiver]
+
+
+
     [com.walmartlabs.lacinia.schema :as schema]
 
     [io.pedestal.http :as server]
     [io.pedestal.http.route :as route]
+
     [xtrax.base-receiver-service.service :as service]
-    ; [xtrax.base-receiver-service.schema :as schema]
+    [xtrax.base-receiver-service.schema :as receiver-schema]
+    [xtrax.base-receiver-service.receiver :as receiver]
+        ; [xtrax.base-receiver-service.schema :as schema]
     [com.walmartlabs.lacinia.pedestal :as lp]
     [com.walmartlabs.lacinia.util :refer [attach-resolvers attach-scalar-transformers attach-streamers]])
   (:gen-class))
@@ -27,7 +32,7 @@
 ;                                               :subscriptions-path "/graphql-ws"}))
 
 
-(defonce runnable-service (server/create-server service/service))
+; (defonce runnable-service (server/create-server service/service))
 
 (defn run-dev
   "The entry-point for 'lein run-dev'"
@@ -60,22 +65,22 @@
 (defn -main
   "The entry-point for 'lein run'"
   [& args]
-  (-> "graphql-definitions.edn"
+  (pp/pprint (-> "graphql-definitions.edn"
       resource
       slurp
       edn/read-string
       (attach-scalar-transformers receiver-schema/datetime-transformers)
-      (attach-resolvers {:resolve-receive-signal receiver/subscribe-receive-signal})
-      (attach-streamers {:subscriptions/subscribe-receive-signal receiver/receiver-activity-stream})
+      (attach-streamers {:subscribe-receiver-stream receiver/subscribe-receiver-stream})
       schema/compile
-      (lp/service-map {:graphiql true
-                       :path "/"
-                       :ide-path "/ui"
+      (lp/service-map {:port 8080
+                       :path "/graphql"
+                       :graphiql true
+                       :ide-path "/graphiql"
                        :subscriptions true
                        :subscriptions-path "/graphql-ws"})
       server/create-server
-      server/start)
-  (server/start runnable-service))
+      server/start)))
+  ; (server/start runnable-service))
 
 ;; If you package the service up as a WAR,
 ;; some form of the following function sections is required (for io.pedestal.servlet.ClojureVarServlet).

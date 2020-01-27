@@ -28,8 +28,8 @@
       slurp
       edn/read-string
       (attach-scalar-transformers datetime-transformers)
-      (attach-resolvers {:resolve-receive-signal receiver/subscribe-receive-signal})
-      (attach-streamers {:subscriptions/subscribe-receive-signal receiver/receiver-activity-stream})
+      ; (attach-resolvers {:resolve-receive-signal receiver/subscribe-receive-signal})
+      (attach-streamers {:subscribe-receiver-stream receiver/subscribe-receiver-stream})
       schema/compile
       (lp/service-map {:graphiql true
                        :path "/"

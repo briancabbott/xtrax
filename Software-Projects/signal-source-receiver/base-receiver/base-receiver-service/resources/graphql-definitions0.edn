@@ -1,0 +1,55 @@
+{:scalars
+ {:DateTime
+  {:parse     :datetime-parser
+   :serialize :datetime-serializer}
+  :Date
+  {:parse     :date-parser
+   :serialize :date-serializer}}
+
+ :objects
+ {:ReceiveSignalInit
+  {:fields {:signal-key {:type String :description "adf"}
+            :signal-instance-squuid {:type String :description "adf"}
+            :signal-aq-start-time {:type String :description "adf"}
+            :signal-payload-size {:type String :description "adf"}
+            :signal-payload-last-modified-time {:type String :description "adf"}
+            :signal-payload-response-headers {:type String :description "adf"}
+            :signal-payload-transfer-protocol {:type String :description "adf"}
+            :signal-payload-identified-artifacts-map {:type String :description "adf"}
+            :requested-update-method {:type String :description "adf"} ;;;(:time | :bytes-txd)
+            :requested-update-frequency {:type String :description "adf"}}
+   :description ""}}
+
+
+
+ ;; The stream-subscription event message once the aquisition has started.
+ ;; a list of files identified (or only one for signals with only a single artifact.  the artifact, the file-type, the mime-type.... what else??)
+ :input-objects
+ {:SignalDefinition
+  {:fields {:signal-key {:type String
+                         :description "afeafefef"}}
+   :description "ijiji"}}
+
+
+                                              ;; (time-interval or, a value of the number of bytes received since the last update)}}
+ ;
+
+ ; ;; The stream-subscription event intermittant in the aquisition process.
+ ; {:ReceiveSignalUpdate {:fields  {:signal-instance-squuid {:type ID :description ""}
+ ;                                  :signal-aq-update-time  {:type String :description "A timestamp of this update operation."}
+ ;                                  :bytes-received-since-last {:type Int :description "the number of bytes received since the last update."}
+ ;                                  :bytes-received-total    {:type Int :description "the total number of bytes received. This helps to ensure/signal state-consistency between the scheduler/actuator and the receiver"}
+ ;                                  :errors-in-this-cycle {:type (list ExceptionMessage) :description ""}}}}
+ ;
+ ;
+ ; ; {:ReceiveSignalClose }
+ ; :unions
+ ; {:receive-stream
+ ;  {:members [:ReceiveSignalInit :ReceiveSignalUpdate]}}
+
+
+ :subscriptions
+ {:subscribe-receive-signal {:type :ReceiveSignalInit
+                             :args {:sigdef {:type :SignalDefinition}}
+                             :resolve :resolve-receive-signal
+                             :stream :subscriptions/subscribe-receive-signal}}}

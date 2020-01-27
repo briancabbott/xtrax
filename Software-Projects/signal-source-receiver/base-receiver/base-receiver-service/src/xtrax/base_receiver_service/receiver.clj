@@ -1,51 +1,34 @@
 (ns xtrax.base-receiver-service.receiver
   (:require
-    [com.walmartlabs.lacinia.schema :as schema]
-    [io.pedestal.http.sse :as sse]))
+    [clojure.core.async :refer [chan close! go alt! timeout]]))
 
-(defn send-counter
-  "Counts down to 0, sending value of counter to sse context and
-  recursing on a different thread; ends event stream when counter
-  is 0."
-  [ctx count]
-  (sse/send-event ctx "count" (str count ", thread: " (.getId (Thread/currentThread))))
-  (Thread/sleep 2000)
-  (if (> count 0)
-    (future (send-counter ctx (dec count)))
-    (sse/end-event-stream ctx)))
+(def stream-send-events (atom 0))
 
-(defn sse-stream-ready
-  "Starts sending counter events to client."
-  [ctx]
-  (send-counter ctx 10))
-;
-; ;; Wire root URL to sse event stream
-; (defroutes routes
-;   [[["/" {:get [::send-counter (sse/sse-setup sse-stream-ready)]}]]])
-;
-; ;; You can use this fn or a per-request fn via io.pedestal.service.http.route/url-for
-; (def url-for (route/url-for-routes routes))
-;
-; ;; Consumed by server-sent-events.server/create-server
-; (def service {:env :prod
-;               ;; You can bring your own non-default interceptors. Make
-;               ;; sure you include routing and set it up right for
-;               ;; dev-mode. If you do, many other keys for configuring
-;               ;; default interceptors will be ignored.
-;               ;; :bootstrap/interceptors []
-;               ::bootstrap/routes routes
-;               ;; Root for resource interceptor that is available by default.
-;               ::bootstrap/resource-path "/public"
-;               ;; Either :jetty or :tomcat (see comments in project.clj
-;               ;; to enable Tomcat)
-;               ::bootstrap/type :jetty
-;               ::bootstrap/port 8080})
+(defn start-receiver [a]
+  (reset! stream-send-events 0)
+  0)
 
+(defn has-receiver-sent-close-event? [receiver-watch-object]
+  (prn (str " in ----> has-receiver-sent-close-event?::  "  @stream-send-events))
+  (swap! stream-send-events inc)
+  (if (< @stream-send-events 30)
+    false
+    true))
 
-(defn subscribe-receive-signal []
-  (prn "entering subscribe-receive-signal")
-  {})
-
-(defn receiver-activity-stream [context args source-stream]
-  (prn "entering receiver-activity-stream....")
-  {:signal-key 1})
+(defn subscribe-receiver-stream [context args source-stream]
+  (let [sigdef-arg (:sigdef args)
+        signal-key (:signalKey sigdef-arg)
+        receiver-watch-obj (start-receiver signal-key)]
+    (let [abort-ch (chan)]
+      (go
+        (loop [stream-active? (not (has-receiver-sent-close-event? receiver-watch-obj))]
+          (prn "LOOPING!")
+          (if stream-active?
+            (do
+              ;; To-do: Block and wait until the next stream-event comes in from the receiver?
+              (source-stream {:signalKey @stream-send-events})
+              (alt! abort-ch nil (timeout 1000)
+              (recur (not (has-receiver-sent-close-event? receiver-watch-obj)))))
+            (source-stream nil))))
+      ;; Cleanup:
+      #(close! abort-ch))))
