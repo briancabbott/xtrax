@@ -1,0 +1,93 @@
+# Copyright (c) Bosch Software Innovations GmbH 2019.
+#
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v2.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v20.html
+#
+# SPDX-License-Identifier: EPL-2.0
+trigger:
+  branches:
+    include:
+      - '*'
+
+variables:
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+container: 'maven:3.6-jdk-8-slim'
+
+steps:
+  # this has to be done first on the clean clone
+- task: Bash@3
+  displayName: 'test for licenseHeaders'
+  inputs:
+    targetType: 'inline'
+    script: '.ci-scripts/test-for-licenseHeaders.sh --no-git'
+  
+  # The following task is currently in beta state and actually not recommended for productive use
+  # related documentation: https://docs.microsoft.com/en-us/azure/devops/pipelines/caching/?view=azure-devops#maven
+- task: CacheBeta@0
+  displayName: Cache Maven local repo
+  inputs:
+    key: $(Build.SourcesDirectory)/pom.xml
+    path: $(MAVEN_CACHE_FOLDER)
+
+- task: Bash@3
+  displayName: 'Write settings.xml, pointing to custom local repository'
+  inputs:
+    targetType: 'inline'
+    script: |
+      mkdir -p $HOME/.m2
+      echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">' > $HOME/.m2/settings.xml
+      echo '<localRepository>$(Pipeline.Workspace)/.m2/repository</localRepository>' >> $HOME/.m2/settings.xml
+      echo '</settings>' >> $HOME/.m2/settings.xml
+
+- task: Maven@3
+  displayName: 'mvn install'
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'install'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenOptions: $(MAVEN_OPTS)
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    sonarQubeRunAnalysis: false
+    checkStyleRunAnalysis: true
+    pmdRunAnalysis: true
+    findBugsRunAnalysis: true
+
+- task: Bash@3
+  displayName: 'test example project with maven'
+  inputs:
+    targetType: 'inline'
+    script: '.ci-scripts/test-ExampleTestProject-with-maven.sh'
+
+- task: Bash@3
+  displayName: 'test example project with cli'
+  inputs:
+    targetType: 'inline'
+    script: '.ci-scripts/test-ExampleTestProject-with-CLI.sh'
+
+- task: Bash@3
+  displayName: 'test example project with gradle'
+  inputs:
+    targetType: 'inline'
+    script: '.ci-scripts/test-ExampleTestProject-with-gradle.sh'
+
+- task: Bash@3
+  displayName: 'static code analysis'
+  inputs:
+    targetType: 'inline'
+    script: '.ci-scripts/test-run-all-static-code-analysis.sh'
+
+- task: Bash@3
+  displayName: 'site-tests in antenna-documentation'
+  inputs:
+    targetType: 'inline'
+    script: '.ci-scripts/test-antenna-documentation-site-tests.sh'

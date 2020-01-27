@@ -1,0 +1,11 @@
+CREATE ROLE "xtrax-brian-devdb" WITH
+	LOGIN
+	SUPERUSER
+	CREATEDB
+	CREATEROLE
+	INHERIT
+	REPLICATION
+	CONNECTION LIMIT -1
+	PASSWORD 'xxxxxx';
+
+ALTER DATABASE "xtrax-dev-local" OWNER TO "xtrax-brian-devdb";
