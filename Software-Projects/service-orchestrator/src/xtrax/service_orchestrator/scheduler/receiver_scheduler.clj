@@ -15,7 +15,11 @@
 
 (declare is-receiver-schedule-valid?)
 
-(defn create-new-receiver-schedule [receiver-schedule-object]
+(defn create-new-receiver-schedule
+  "Create a new Receiver-Schedule Record in the configured Datra-Store and, if
+  its first start-time is within the current orchestration-executor's
+  scheduling-period, start it."
+  [receiver-schedule-object]
   (if (is-receiver-schedule-valid? receiver-schedule-object)
     (do
       (data-store/persist-object :receiver-schedule-object receiver-schedule-object)

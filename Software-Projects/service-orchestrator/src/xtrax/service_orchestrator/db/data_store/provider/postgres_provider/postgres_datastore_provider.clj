@@ -51,4 +51,5 @@
       (prn "store"))
 
     (delete-data [data-key data])
+
     (read-data [data-key data]))

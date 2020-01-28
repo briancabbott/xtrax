@@ -1,5 +1,7 @@
 (ns xtrax.service-coordinator.db.data-store.core)
 
+(defprotocol IDataStore )
+
 
 (defn connect-store [])
 
@@ -14,4 +16,5 @@
   [])
 
 
-(defn persist-object [object-key object])
+
+(defn persist-entity [object-key object])
