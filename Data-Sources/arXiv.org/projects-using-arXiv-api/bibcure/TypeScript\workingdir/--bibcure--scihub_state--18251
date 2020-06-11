@@ -1,0 +1,5 @@
+child_process(18251)::clone(https://github.com/bibcure/scihub_state):stderr:data: Cloning into 'undefined\bibc--06-10-2020--vsfJVLrhccVHMzv8GCctiG/scihub_state'...
+child_process(18251)::clone(https://github.com/bibcure/scihub_state):stderr:data: POST git-upload-pack (165 bytes)
+child_process(18251)::clone(https://github.com/bibcure/scihub_state):stderr:data: remote: Enumerating objects: 12, done.        
+remote: Total 12 (delta 0), reused 0 (delta 0), pack-reused 12        
+child_process(18251)::clone(https://github.com/bibcure/scihub_state):close()

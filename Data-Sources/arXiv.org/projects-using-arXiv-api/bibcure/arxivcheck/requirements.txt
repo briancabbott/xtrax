@@ -1,0 +1,8 @@
+bibtexparser
+future
+doi2bib
+title2bib
+unidecode
+feedparser
+sphinx-gallery
+sphinxcontrib-napoleon

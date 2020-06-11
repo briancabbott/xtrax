@@ -1,0 +1,10 @@
+{
+    "commandText": "git clone --progress --verbose https://github.com/bibcure/scihub2pdf undefined\\bibc--06-10-2020--vsfJVLrhccVHMzv8GCctiG/scihub2pdf",
+    "repo": "https://github.com/bibcure/scihub2pdf",
+    "targetPath": "undefined\\bibc--06-10-2020--vsfJVLrhccVHMzv8GCctiG/scihub2pdf",
+    "startTime": "2020-06-11T01:32:40.880Z",
+    "endTime": "2020-06-11T01:32:42.063Z",
+    "childProcessPid": 18238,
+    "executionErrors": [],
+    "commandLogFilePath": "/Users/brian/dev_space/GitHub-briancabbott/GitHub-Repository-Downloader/TypeScript\\workingdir/--bibcure--scihub2pdf--18238"
+}

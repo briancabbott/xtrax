@@ -1,0 +1,10 @@
+{
+    "commandText": "git clone --progress --verbose https://github.com/bibcure/arxivcheck undefined\\bibc--06-10-2020--vsfJVLrhccVHMzv8GCctiG/arxivcheck",
+    "repo": "https://github.com/bibcure/arxivcheck",
+    "targetPath": "undefined\\bibc--06-10-2020--vsfJVLrhccVHMzv8GCctiG/arxivcheck",
+    "startTime": "2020-06-11T01:32:34.779Z",
+    "endTime": "2020-06-11T01:32:35.392Z",
+    "childProcessPid": 18200,
+    "executionErrors": [],
+    "commandLogFilePath": "/Users/brian/dev_space/GitHub-briancabbott/GitHub-Repository-Downloader/TypeScript\\workingdir/--bibcure--arxivcheck--18200"
+}

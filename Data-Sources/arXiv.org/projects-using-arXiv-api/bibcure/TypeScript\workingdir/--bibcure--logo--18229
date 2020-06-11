@@ -1,0 +1,4 @@
+child_process(18229)::clone(https://github.com/bibcure/logo):stderr:data: Cloning into 'undefined\bibc--06-10-2020--vsfJVLrhccVHMzv8GCctiG/logo'...
+child_process(18229)::clone(https://github.com/bibcure/logo):stderr:data: POST git-upload-pack (165 bytes)
+child_process(18229)::clone(https://github.com/bibcure/logo):stderr:data: remote: Enumerating objects: 25, done.        
+child_process(18229)::clone(https://github.com/bibcure/logo):stderr:data: remote: Total 25 (delta 0), reused 0 (delta 0), pack-reused 25        

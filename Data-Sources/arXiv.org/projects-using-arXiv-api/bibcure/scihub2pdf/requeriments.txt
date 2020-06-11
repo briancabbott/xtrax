@@ -1,0 +1,9 @@
+bibtexparser
+future
+requests
+lxml
+title2bib
+Pillow
+arxivcheck
+selenium
+six

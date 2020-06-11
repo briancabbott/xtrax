@@ -1,0 +1,10 @@
+{
+    "commandText": "git clone --progress --verbose https://github.com/bibcure/doi2bib undefined\\bibc--06-10-2020--vsfJVLrhccVHMzv8GCctiG/doi2bib",
+    "repo": "https://github.com/bibcure/doi2bib",
+    "targetPath": "undefined\\bibc--06-10-2020--vsfJVLrhccVHMzv8GCctiG/doi2bib",
+    "startTime": "2020-06-11T01:32:37.959Z",
+    "endTime": "2020-06-11T01:32:38.447Z",
+    "childProcessPid": 18224,
+    "executionErrors": [],
+    "commandLogFilePath": "/Users/brian/dev_space/GitHub-briancabbott/GitHub-Repository-Downloader/TypeScript\\workingdir/--bibcure--doi2bib--18224"
+}
